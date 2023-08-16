@@ -27,12 +27,9 @@ async function getShowsByTerm(term) {
     showData.name = await entry.show.name;
     showData.summary = await entry.show.summary;
 
-    if (await !entry.show.image === null) {
-    showData.image = await entry.show.image.medium;
-     } else {
-    showData.image = 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac\
-    /No_image_available.svg/300px-No_image_available.svg.png';
-     }
+    await entry.show.image ? showData.image = await entry.show.image.medium
+      : showData.image = 'https://upload.wikimedia.org/wikipedia/commons/\
+      thumb/a/ac/No_image_available.svg/300px-No_image_available.svg.png';
 
     shows.push(showData);
   }
