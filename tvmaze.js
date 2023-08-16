@@ -7,6 +7,7 @@ const $searchForm = $("#searchForm");
 const DEFAULT_IMG_URL = "https://upload.wikimedia.org/wikipedia/commons/"
   + "thumb/a/ac/No_image_available.svg/300px-No_image_available.svg.png";
 
+const TVMAZE_URL_BASE = "https://api.tvmaze.com;";
 
 /** Given a search term, search for tv shows that match that query.
  *
@@ -26,11 +27,11 @@ async function getShowsByTerm(term) {
   for (const entry of searchData) {
     const showData = {};
 
-    showData.id = await entry.show.id;
-    showData.name = await entry.show.name;
-    showData.summary = await entry.show.summary;
+    showData.id = entry.show.id;
+    showData.name = entry.show.name;
+    showData.summary = entry.show.summary;
 
-    await entry.show.image ? showData.image = await entry.show.image.medium
+    entry.show.image ? showData.image = entry.show.image.medium
       : showData.image = DEFAULT_IMG_URL;
 
     shows.push(showData);
