@@ -4,6 +4,9 @@ const $showsList = $("#showsList");
 const $episodesArea = $("#episodesArea");
 const $searchForm = $("#searchForm");
 
+const DEFAULT_IMG_URL = "https://upload.wikimedia.org/wikipedia/commons/"
+  + "thumb/a/ac/No_image_available.svg/300px-No_image_available.svg.png";
+
 
 /** Given a search term, search for tv shows that match that query.
  *
@@ -28,33 +31,12 @@ async function getShowsByTerm(term) {
     showData.summary = await entry.show.summary;
 
     await entry.show.image ? showData.image = await entry.show.image.medium
-      : showData.image = 'https://upload.wikimedia.org/wikipedia/commons/\
-      thumb/a/ac/No_image_available.svg/300px-No_image_available.svg.png';
+      : showData.image = DEFAULT_IMG_URL;
 
     shows.push(showData);
   }
   console.log(shows);
   return shows;
-
-
-  // return [
-  //   {
-  //     id: 1767,
-  //     name: "The Bletchley Circle",
-  //     summary:
-  //       `<p><b>The Bletchley Circle</b> follows the journey of four ordinary
-  //          women with extraordinary skills that helped to end World War II.</p>
-  //        <p>Set in 1952, Susan, Millie, Lucy and Jean have returned to their
-  //          normal lives, modestly setting aside the part they played in
-  //          producing crucial intelligence, which helped the Allies to victory
-  //          and shortened the war. When Susan discovers a hidden code behind an
-  //          unsolved murder she is met by skepticism from the police. She
-  //          quickly realises she can only begin to crack the murders and bring
-  //          the culprit to justice with her former friends.</p>`,
-  //     image:
-  //         "http://static.tvmaze.com/uploads/images/medium_portrait/147/369403.jpg"
-  //   }
-  // ]
 }
 
 
@@ -71,8 +53,8 @@ function displayShows(shows) {
         <div data-show-id="${show.id}" class="Show col-md-12 col-lg-6 mb-4">
          <div class="media">
            <img
-              src="http://static.tvmaze.com/uploads/images/medium_portrait/160/401704.jpg"
-              alt="Bletchly Circle San Francisco"
+              src=${show.image}
+              alt="${show.name} image"
               class="w-25 me-3">
            <div class="media-body">
              <h5 class="text-primary">${show.name}</h5>
