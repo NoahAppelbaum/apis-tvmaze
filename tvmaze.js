@@ -20,7 +20,7 @@ async function getShowsByTerm(term) {
   // ADD: Remove placeholder & make request to TVMaze search shows API.
   const params = new URLSearchParams({ q: term });
 
-  const response = await fetch(`https://api.tvmaze.com/search/shows?${params}`);
+  const response = await fetch(`${TVMAZE_URL_BASE}/search/shows?${params}`);
   const searchData = await response.json();
   //array w/ objects for each show
   const shows = searchData.map(entry => ({
