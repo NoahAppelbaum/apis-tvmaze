@@ -7,7 +7,7 @@ const $searchForm = $("#searchForm");
 const DEFAULT_IMG_URL = "https://upload.wikimedia.org/wikipedia/commons/"
   + "thumb/a/ac/No_image_available.svg/300px-No_image_available.svg.png";
 
-const TVMAZE_URL_BASE = "https://api.tvmaze.com;";
+const TVMAZE_URL_BASE = "https://api.tvmaze.com";
 
 /** Given a search term, search for tv shows that match that query.
  *
@@ -95,10 +95,39 @@ $searchForm.on("submit", async function handleSearchForm(evt) {
  *      { id, name, season, number }
  */
 
-// async function getEpisodesOfShow(id) { }
+async function getEpisodesOfShow(id) {
+  const response = await fetch(`${TVMAZE_URL_BASE}/shows/${id}/episodes`);
+  const episodesData = await response.json();
+  const episodes = [];
+  for (const entry of episodesData) {
+    const episode = {id, name, season, number};
+    episodes.push(episode);
+  }
+
+  return episodes;
+  //return array of objects with name, id, episode number
+
+}
 
 /** Write a clear docstring for this function... */
 
-// function displayEpisodes(episodes) { }
+function displayEpisodes(episodes) {
+  for (const episode of episodes) {
+    const $listEntry = $("<li>").text(`${episode.name} (Season ${episode.season}, Number ${episode.number})`);
+    $("#episodesList").append($listEntry.get());
+  }
+  $episodesArea.css("display", "block");
+}
+
+async function getAndDisplayEpisodes(id) {
+  const result = await getEpisodesOfShow(id);
+  displayEpisodes(result);
+}
+
+function useEpisodeButton() {
+
+}
+
+$showsList.on("click", ".Show-getEpisodes", useEpisodeButton);
 
 // add other functions that will be useful / match our structure & design
