@@ -16,7 +16,7 @@ async function getShowsByTerm(term) {
   // ADD: Remove placeholder & make request to TVMaze search shows API.
   const params = new URLSearchParams({ q: term });
 
-  const response = await fetch(`https://api.tvmaze.com/search/shows${params}`);
+  const response = await fetch(`https://api.tvmaze.com/search/shows?${params}`);
   const searchData = await response.json();
   //array w/ objects for each show
   const shows = [];
@@ -25,12 +25,18 @@ async function getShowsByTerm(term) {
 
     showData.id = await entry.show.id;
     showData.name = await entry.show.name;
-    showData.summary = await entry.summary;
-    showData.image = await entry.image.medium;
+    showData.summary = await entry.show.summary;
+
+    if (await !entry.show.image === null) {
+    showData.image = await entry.show.image.medium;
+     } else {
+    showData.image = 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac\
+    /No_image_available.svg/300px-No_image_available.svg.png';
+     }
 
     shows.push(showData);
   }
-
+  console.log(shows);
   return shows;
 
 
