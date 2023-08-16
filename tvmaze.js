@@ -23,19 +23,13 @@ async function getShowsByTerm(term) {
   const response = await fetch(`https://api.tvmaze.com/search/shows?${params}`);
   const searchData = await response.json();
   //array w/ objects for each show
-  const shows = [];
-  for (const entry of searchData) {
-    const showData = {};
+  const shows = searchData.map(entry => ({
+    id: entry.show.id,
+    name: entry.show.name,
+    summary: entry.show.summary,
+    image: (entry.show.image ? entry.show.image.medium : DEFAULT_IMG_URL)
+  }));
 
-    showData.id = entry.show.id;
-    showData.name = entry.show.name;
-    showData.summary = entry.show.summary;
-
-    entry.show.image ? showData.image = entry.show.image.medium
-      : showData.image = DEFAULT_IMG_URL;
-
-    shows.push(showData);
-  }
   console.log(shows);
   return shows;
 }
@@ -100,34 +94,55 @@ async function getEpisodesOfShow(id) {
   const episodesData = await response.json();
   const episodes = [];
   for (const entry of episodesData) {
-    const episode = {id, name, season, number};
-    episodes.push(episode);
+    //TODO: how to object shorthand?
+    const { id, name, season, number } = entry;
+    episodes.push({ id, name, season, number });
   }
+
+  // const episodes = episodesData.map(episode => ({
+  //   id, name, season, number
+  // }));
 
   return episodes;
   //return array of objects with name, id, episode number
 
 }
 
-/** Write a clear docstring for this function... */
+/** displayEpisodes: Generates episode strings and appends them to the list
+ * in the episodes area
+ */
 
 function displayEpisodes(episodes) {
+  console.log("displEpisodes has been called");
   for (const episode of episodes) {
     const $listEntry = $("<li>").text(`${episode.name} (Season ${episode.season}, Number ${episode.number})`);
     $("#episodesList").append($listEntry.get());
+    console.log("appending", `${$listEntry.text()}`);
   }
-  $episodesArea.css("display", "block");
+
+  $episodesArea.show();
 }
+
+
+/** getAndDisplayEpisodes: accepts a show ID to retrieve show episode data
+ * and display
+ */
 
 async function getAndDisplayEpisodes(id) {
   const result = await getEpisodesOfShow(id);
   displayEpisodes(result);
 }
 
-function useEpisodeButton() {
 
+/** useEpisodeButton: calls getAndDisplayEpisodes on parent of episodes button */
+function useEpisodeButton(evt) {
+  //FIXME: there must be a better way ->
+  const showId = $(evt.target).parent().parent().parent().attr("data-show-id");
+  getAndDisplayEpisodes(showId);
 }
 
+
+/** Event listener for Episodes button */
 $showsList.on("click", ".Show-getEpisodes", useEpisodeButton);
 
 // add other functions that will be useful / match our structure & design
