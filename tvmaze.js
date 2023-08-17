@@ -94,7 +94,6 @@ async function getEpisodesOfShow(id) {
   const episodesData = await response.json();
   const episodes = [];
   for (const entry of episodesData) {
-    //TODO: how to object shorthand?
     const { id, name, season, number } = entry;
     episodes.push({ id, name, season, number });
   }
@@ -115,8 +114,10 @@ async function getEpisodesOfShow(id) {
 function displayEpisodes(episodes) {
   console.log("displEpisodes has been called");
   for (const episode of episodes) {
-    const $listEntry = $("<li>").text(`${episode.name} (Season ${episode.season}, Number ${episode.number})`);
-    $("#episodesList").append($listEntry.get());
+    const $listEntry = $("<li>").text(
+      `${episode.name} (Season ${episode.season}, Number ${episode.number})`
+    );
+    $("#episodesList").append($listEntry);
     console.log("appending", `${$listEntry.text()}`);
   }
 
