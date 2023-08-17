@@ -92,15 +92,11 @@ $searchForm.on("submit", async function handleSearchForm(evt) {
 async function getEpisodesOfShow(id) {
   const response = await fetch(`${TVMAZE_URL_BASE}/shows/${id}/episodes`);
   const episodesData = await response.json();
-  const episodes = [];
-  for (const entry of episodesData) {
-    const { id, name, season, number } = entry;
-    episodes.push({ id, name, season, number });
-  }
 
-  // const episodes = episodesData.map(episode => ({
-  //   id, name, season, number
-  // }));
+  const episodes = episodesData.map(episode => {
+     const {id, name, season, number} = episode;
+     return {id, name, season, number};
+   });
 
   return episodes;
   //return array of objects with name, id, episode number
@@ -113,6 +109,7 @@ async function getEpisodesOfShow(id) {
 
 function displayEpisodes(episodes) {
   console.log("displEpisodes has been called");
+  $("#episodesList").html('');
   for (const episode of episodes) {
     const $listEntry = $("<li>").text(
       `${episode.name} (Season ${episode.season}, Number ${episode.number})`
@@ -137,7 +134,7 @@ async function getAndDisplayEpisodes(id) {
 
 /** useEpisodeButton: calls getAndDisplayEpisodes on parent of episodes button */
 function useEpisodeButton(evt) {
-  //FIXME: there must be a better way ->
+  //FIXME: there must be a better way -> use .closest()
   const showId = $(evt.target).parent().parent().parent().attr("data-show-id");
   getAndDisplayEpisodes(showId);
 }
